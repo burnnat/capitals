@@ -1,0 +1,3 @@
+Capitals is a utility allowing you to modify the capitalization of selected text. Support is provided for converting text to all uppercase and all lowercase, as well as converting from lowercase letters to small caps and vice versa.
+
+Capitals is an open-source project. View code and submit issues at: https://github.com/burnnat/capitals
