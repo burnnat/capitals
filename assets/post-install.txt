@@ -1,0 +1,1 @@
+Change text capitalization by selecting the text you want to modify and then choosing one of the "Capitals" menu items.
