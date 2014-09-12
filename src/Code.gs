@@ -3,6 +3,7 @@ function onOpen() {
     .createAddonMenu()
       .addItem('Make uppercase', 'makeUpperCase')
       .addItem('Make lowercase', 'makeLowerCase')
+      .addItem('Make title case', 'makeTitleCase')
     .addSeparator()
       .addItem('Add small caps', 'makeSmallCaps')
       .addItem('Remove small caps', 'makeNormalCaps')
@@ -131,5 +132,11 @@ function makeUpperCase() {
 function makeLowerCase() {
   modifySelected(function(text) {
     return text.toLowerCase();
+  });
+}
+
+function makeTitleCase() {
+  modifySelected(function(text) {
+    return text.toTitleCase();
   });
 }
