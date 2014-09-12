@@ -4,6 +4,12 @@ Capitals is an add-on utility for Google Docs that allows you to modify the capi
 
 [<img src="https://developer.chrome.com/webstore/images/ChromeWebStore_BadgeWBorder_v2_206x58.png"/>](https://chrome.google.com/webstore/detail/capitals/aadnfffgphhnibneekldbgjakffoonam)
 
+## Acknowledgments ##
+
+Special thanks to:
+
+ - David Gouch for his ["To Title Case"](http://individed.com/code/to-title-case/) script
+
 ## License ##
 
 This software is licensed under the MIT License.
