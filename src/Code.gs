@@ -57,25 +57,50 @@ function modifySelected(fn) {
   }
 }
 
-function replaceText(fn) {
+function replaceText(fn, attrFn) {
   modifySelected(function(el, text, value, startIndex, endIndex, builder) {
     value = fn(value);
     
-//    var attrs = [];
-//    
-//    for (var i = startIndex; i <= endIndex; i++) {
-//      attrs[i - startIndex] = text.getAttributes(i);
-//    }
+    var attrs = [];
+    
+    for (var i = startIndex; i <= endIndex; i++) {
+      attrs[i - startIndex] = text.getAttributes(i);
+    }
     
     text.deleteText(startIndex, endIndex);
     text.insertText(startIndex, value);
     
-//    for (var i = startIndex; i <= endIndex; i++) {
-//      text.setAttributes(i, i, attrs[i - startIndex]);
-//    }
+    var attrValue = null;
     
-    builder.addElement(el, startIndex, endIndex);
+    for (var i = 0; i < value.length; i++) {
+      attrValue = attrFn ? attrFn(attrs, i) : attrs[i];
+      
+      if (attrValue) {
+        text.setAttributes(
+          startIndex + i,
+          startIndex + i,
+          attrValue
+        );
+      }
+    }
+    
+    builder.addElement(el, startIndex, startIndex + value.length - 1);
   });
+}
+
+function cleanAttributes(attrs) {
+  var cleaned = {};
+  var value;
+  
+  for (var att in attrs) {
+    value = attrs[att];
+    
+    if (value !== null) {
+      cleaned[att] = value;
+    }
+  }
+  
+  return cleaned;
 }
 
 function makeUpperCase() {

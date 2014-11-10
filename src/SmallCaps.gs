@@ -55,22 +55,30 @@ function makeSmallCaps() {
     swapChars(smallCaps);
   }
   else {
-    modifySelected(
+    var extras = [];
+    var count = 0;
+    
+    replaceText(
       function(text) {
         return text.replace(
           /[a-z]/g,
-          function(c) {
+          function(c, offset) {
+            extras.push(offset + extras.length);
             return c.toUpperCase() + variantSurrogate;
           }
         );
       },
-      function(el, text, start, end) {
-        var regex = new RegExp('([A-Z]' + variantSurrogate + ')+', 'g');
-        var match;
+      function(attrs, index) {
+        var value = cleanAttributes(attrs[index - count]);
         
-        while (match = regex.exec(text)) {
-          el.setFontSize(start + match.index, start + match[0].length, 8);
+        if (index === extras[0]) {
+          // current index is a small cap
+          value[DocumentApp.Attribute.FONT_SIZE] = Math.round(value[DocumentApp.Attribute.FONT_SIZE] * 0.77);
+          extras.shift();
+          count++;
         }
+        
+        return value;
       }
     );
   }
@@ -81,17 +89,30 @@ function makeNormalCaps() {
     swapChars(normalCaps);
   }
   else {
-    modifySelected(
+    var extras = [];
+    var count = 0;
+    
+    replaceText(
       function(text) {
         return text.replace(
           new RegExp('[A-Z]' + variantSurrogate, 'g'),
-          function(c) {
+          function(c, offset) {
+            extras.push(offset - extras.length);
             return c[0].toLowerCase();
           }
         );
       },
-      function(el, text, start, end) {
+      function(attrs, index) {
+        var value = cleanAttributes(attrs[index + count]);
         
+        if (index === extras[0]) {
+          // current index is a small cap
+          extras.shift();
+          count++;
+          value[DocumentApp.Attribute.FONT_SIZE] = attrs[index + count][DocumentApp.Attribute.FONT_SIZE];
+        }
+        
+        return value;
       }
     );
   }
