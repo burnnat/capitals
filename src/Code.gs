@@ -73,7 +73,7 @@ function replaceText(fn, attrFn) {
     var attrValue = null;
     
     for (var i = 0; i < value.length; i++) {
-      attrValue = attrFn ? attrFn(attrs, i) : attrs[i];
+      attrValue = attrFn ? attrFn(attrs, i) : cleanAttributes(attrs[i]);
       
       if (attrValue) {
         text.setAttributes(

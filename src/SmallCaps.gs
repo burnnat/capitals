@@ -36,7 +36,7 @@ for (var c in smallCaps) {
 }
 
 function swapChars(charset) {
-  modifySelected(function(text) {
+  replaceText(function(text) {
     return text.replace(
       /./g,
       function(c) {
