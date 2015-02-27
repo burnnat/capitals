@@ -1,5 +1,3 @@
-var usePhonetics = true;
-
 var smallCaps = {
   'a': 0x1D00,
   'b': 0x0299,
@@ -41,7 +39,7 @@ function swapChars(charset) {
       /./g,
       function(c) {
         var code = charset[c];
-        
+
         return code ? String.fromCharCode(code) : c;
       }
     );
@@ -50,14 +48,18 @@ function swapChars(charset) {
 
 var variantSurrogate = '\uFE0C';
 
+function usePhonetics() {
+  return PropertiesService.getDocumentProperties().getProperty('smallcaps') !== 'scaled';
+}
+
 function makeSmallCaps() {
-  if (usePhonetics) {
+  if (usePhonetics()) {
     swapChars(smallCaps);
   }
   else {
     var extras = [];
     var count = 0;
-    
+
     replaceText(
       function(text) {
         return text.replace(
@@ -70,14 +72,14 @@ function makeSmallCaps() {
       },
       function(attrs, index) {
         var value = cleanAttributes(attrs[index - count]);
-        
+
         if (index === extras[0]) {
           // current index is a small cap
           value[DocumentApp.Attribute.FONT_SIZE] = Math.round(value[DocumentApp.Attribute.FONT_SIZE] * 0.77);
           extras.shift();
           count++;
         }
-        
+
         return value;
       }
     );
@@ -85,13 +87,13 @@ function makeSmallCaps() {
 }
 
 function makeNormalCaps() {
-  if (usePhonetics) {
+  if (usePhonetics()) {
     swapChars(normalCaps);
   }
   else {
     var extras = [];
     var count = 0;
-    
+
     replaceText(
       function(text) {
         return text.replace(
@@ -104,14 +106,14 @@ function makeNormalCaps() {
       },
       function(attrs, index) {
         var value = cleanAttributes(attrs[index + count]);
-        
+
         if (index === extras[0]) {
           // current index is a small cap
           extras.shift();
           count++;
           value[DocumentApp.Attribute.FONT_SIZE] = attrs[index + count][DocumentApp.Attribute.FONT_SIZE];
         }
-        
+
         return value;
       }
     );

@@ -1,0 +1,103 @@
+<!-- styles -->
+<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons.css">
+<style>
+.example {
+  margin: 15px;
+  font-size: 22px;
+  text-align: center;
+}
+
+.example .smallcap {
+  font-size: 18px;
+}
+
+button.right {
+  float: right;
+}
+</style>
+
+<!-- content -->
+<form id="prefs">
+<div class="block">
+  <strong>Small caps style</strong>
+</div>
+<div class="block">
+  <div>
+    <input type="radio" name="smallcaps" value="unicode" id="smallcaps-unicode">
+    <label for="smallcaps-unicode">
+      Unicode (not supported for all fonts and platforms)
+      <div class="example">
+        AᴀBʙCᴄDᴅEᴇFꜰGɢHʜIɪJᴊKᴋLʟMᴍ
+        <br/>
+        NɴOᴏPᴘQǫRʀSꜱTᴛUᴜVᴠWᴡXxYʏZᴢ
+      </div>
+    </label>
+  </div>
+  <div>
+    <input type="radio" name="smallcaps" value="scaled" id="smallcaps-scaled">
+    <label for="smallcaps-scaled">
+      Scaled (may produce uneven font weights)
+      <div class="example">
+        <!--
+        -->A<span class="smallcap">A</span><!--
+        -->B<span class="smallcap">B</span><!--
+        -->C<span class="smallcap">C</span><!--
+        -->D<span class="smallcap">D</span><!--
+        -->E<span class="smallcap">E</span><!--
+        -->F<span class="smallcap">F</span><!--
+        -->G<span class="smallcap">G</span><!--
+        -->H<span class="smallcap">H</span><!--
+        -->I<span class="smallcap">I</span><!--
+        -->J<span class="smallcap">J</span><!--
+        -->K<span class="smallcap">K</span><!--
+        -->L<span class="smallcap">L</span><!--
+        -->M<span class="smallcap">M</span><!--
+        -->
+        <br/>
+        <!--
+        -->N<span class="smallcap">N</span><!--
+        -->O<span class="smallcap">O</span><!--
+        -->P<span class="smallcap">P</span><!--
+        -->Q<span class="smallcap">Q</span><!--
+        -->R<span class="smallcap">R</span><!--
+        -->S<span class="smallcap">S</span><!--
+        -->T<span class="smallcap">T</span><!--
+        -->U<span class="smallcap">U</span><!--
+        -->V<span class="smallcap">V</span><!--
+        -->W<span class="smallcap">W</span><!--
+        -->X<span class="smallcap">X</span><!--
+        -->Y<span class="smallcap">Y</span><!--
+        -->Z<span class="smallcap">Z</span><!--
+        -->
+      </div>
+    </label>
+  </div>
+</div>
+</form>
+<div class="block">
+  <button class="action" onclick="save()">OK</button>
+  <button onclick="close()">Cancel</button>
+  <button class="right" onclick="saveDefault()">Set as default</button>
+</div>
+
+<!-- scripts -->
+<script>
+document.getElementById('smallcaps-<?= smallcaps ?>').checked = true;
+
+function save() {
+  this.disabled = true;
+
+  var form = document.getElementById('prefs');
+  google.script.run
+          .withSuccessHandler(close)
+          .savePreferences(form);
+}
+
+function saveDefault() {
+  this.disabled = true;
+}
+
+function close() {
+  google.script.host.close();
+}
+</script>
