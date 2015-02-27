@@ -34,9 +34,19 @@ function modifySelected(fn) {
         var text = element.editAsText();
         var value = text.getText();
 
-        var startIndex = range.getStartOffset();
-        var endIndex = range.getEndOffsetInclusive();
-        value = value.substring(startIndex, endIndex + 1);
+        var partial = range.isPartial();
+        var startIndex;
+        var endIndex;
+
+        if (partial) {
+          startIndex = range.getStartOffset();
+          endIndex = range.getEndOffsetInclusive();
+          value = value.substring(startIndex, endIndex + 1);
+        }
+        else {
+          startIndex = 0;
+          endIndex = value.length - 1;
+        }
 
         if (value.length > 0) {
           hasText = true;
@@ -45,7 +55,7 @@ function modifySelected(fn) {
           continue;
         }
 
-        fn(element, text, value, startIndex, endIndex, builder);
+        fn(element, text, value, partial, startIndex, endIndex, builder);
       }
     }
   }
@@ -60,7 +70,7 @@ function modifySelected(fn) {
 }
 
 function replaceText(fn, attrFn) {
-  modifySelected(function(el, text, value, startIndex, endIndex, builder) {
+  modifySelected(function(el, text, value, partial, startIndex, endIndex, builder) {
     value = fn(value);
 
     var attrs = [];
@@ -86,7 +96,12 @@ function replaceText(fn, attrFn) {
       }
     }
 
-    builder.addElement(el, startIndex, startIndex + value.length - 1);
+    if (partial) {
+      builder.addElement(el, startIndex, startIndex + value.length - 1);
+    }
+    else {
+      builder.addElement(el);
+    }
   });
 }
 
