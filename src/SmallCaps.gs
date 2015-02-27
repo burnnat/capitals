@@ -57,11 +57,14 @@ function makeSmallCaps() {
     swapChars(smallCaps);
   }
   else {
-    var extras = [];
-    var count = 0;
+    var extras;
+    var count;
 
     replaceText(
       function(text) {
+        extras = [];
+        count = 0;
+
         return text.replace(
           /[a-z]/g,
           function(c, offset) {
