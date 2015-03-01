@@ -90,35 +90,34 @@ function makeSmallCaps() {
 }
 
 function makeNormalCaps() {
-  if (usePhonetics()) {
-    swapChars(normalCaps);
-  }
-  else {
-    var extras = [];
-    var count = 0;
+  // Phonetics
+  swapChars(normalCaps);
 
-    replaceText(
-      function(text) {
-        return text.replace(
-          new RegExp('[A-Z]' + variantSurrogate, 'g'),
-          function(c, offset) {
-            extras.push(offset - extras.length);
-            return c[0].toLowerCase();
-          }
-        );
-      },
-      function(attrs, index) {
-        var value = cleanAttributes(attrs[index + count]);
+  // Font scaling
+  var extras = [];
+  var count = 0;
 
-        if (index === extras[0]) {
-          // current index is a small cap
-          extras.shift();
-          count++;
-          value[DocumentApp.Attribute.FONT_SIZE] = attrs[index + count][DocumentApp.Attribute.FONT_SIZE];
+  replaceText(
+    function(text) {
+      return text.replace(
+        new RegExp('[A-Z]' + variantSurrogate, 'g'),
+        function(c, offset) {
+          extras.push(offset - extras.length);
+          return c[0].toLowerCase();
         }
+      );
+    },
+    function(attrs, index) {
+      var value = cleanAttributes(attrs[index + count]);
 
-        return value;
+      if (index === extras[0]) {
+        // current index is a small cap
+        extras.shift();
+        count++;
+        value[DocumentApp.Attribute.FONT_SIZE] = attrs[index + count][DocumentApp.Attribute.FONT_SIZE];
       }
-    );
-  }
+
+      return value;
+    }
+  );
 }
