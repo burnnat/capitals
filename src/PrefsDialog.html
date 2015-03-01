@@ -23,18 +23,7 @@ button.right {
 </div>
 <div class="block">
   <div>
-    <input type="radio" name="smallcaps" value="unicode" id="smallcaps-unicode">
-    <label for="smallcaps-unicode">
-      Unicode (not supported for all fonts and platforms)
-      <div class="example">
-        AᴀBʙCᴄDᴅEᴇFꜰGɢHʜIɪJᴊKᴋLʟMᴍ
-        <br/>
-        NɴOᴏPᴘQǫRʀSꜱTᴛUᴜVᴠWᴡXxYʏZᴢ
-      </div>
-    </label>
-  </div>
-  <div>
-    <input type="radio" name="smallcaps" value="scaled" id="smallcaps-scaled">
+    <input type="radio" name="smallcaps" value="scaled" id="smallcaps-scaled" onclick="updateDefault()">
     <label for="smallcaps-scaled">
       Scaled (may produce uneven font weights)
       <div class="example">
@@ -72,6 +61,17 @@ button.right {
       </div>
     </label>
   </div>
+  <div>
+    <input type="radio" name="smallcaps" value="unicode" id="smallcaps-unicode" onclick="updateDefault()">
+    <label for="smallcaps-unicode">
+      Unicode (not supported for all fonts and platforms)
+      <div class="example">
+        AᴀBʙCᴄDᴅEᴇFꜰGɢHʜIɪJᴊKᴋLʟMᴍ
+        <br/>
+        NɴOᴏPᴘQǫRʀSꜱTᴛUᴜVᴠWᴡXxYʏZᴢ
+      </div>
+    </label>
+  </div>
 </div>
 </form>
 <div class="button-bar">
@@ -79,24 +79,89 @@ button.right {
   <button onclick="close()">Cancel</button>
 </div>
 <div class="button-bar-right">
-  <button onclick="saveDefault()">Set as default</button>
+  <button id="save-default" onclick="saveDefault()">Set as default</button>
 </div>
 
 <!-- scripts -->
 <script>
-document.getElementById('smallcaps-<?= smallcaps ?>').checked = true;
+var prefs = {
+  <? for ( var key in prefs ) { ?>
+    '<?= key ?>': '<?= prefs[key] ?>',
+  <? } ?>
+  '': ''
+};
+
+delete prefs[''];
+
+var defaults = {
+  <? for ( var key in defaults ) { ?>
+    '<?= key ?>': '<?= defaults[key] ?>',
+  <? } ?>
+  '': ''
+};
+
+delete defaults[''];
+
+document.getElementById('smallcaps-' + prefs.smallcaps).checked = true;
+updateDefault();
 
 function save() {
   this.disabled = true;
 
-  var form = document.getElementById('prefs');
   google.script.run
           .withSuccessHandler(close)
-          .savePreferences(form);
+          .savePreferences(form());
 }
 
 function saveDefault() {
   this.disabled = true;
+
+  defaults = formValue();
+
+  google.script.run
+          .withSuccessHandler(updateDefault)
+          .saveDefaults(form());
+}
+
+function updateDefault() {
+  var button = document.getElementById('save-default');
+  var currentDefault = isDefault();
+
+  button.disabled = currentDefault;
+  button.innerHTML = currentDefault ? 'Saved as default' : 'Set as default';
+}
+
+function isDefault() {
+  var current = formValue();
+
+  for (var key in defaults) {
+    if (defaults[key] !== current[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function formValue() {
+  var inputs = form().getElementsByTagName('input');
+
+  var value = {};
+  var el;
+
+  for (var i = 0; i < inputs.length; i++) {
+    el = inputs[i];
+
+    if (el.checked) {
+      value[el.name] = el.value;
+    }
+  }
+
+  return value;
+}
+
+function form() {
+  return document.getElementById('prefs');
 }
 
 function close() {
