@@ -76,9 +76,13 @@ function makeSmallCaps() {
       function(attrs, index) {
         var value = cleanAttributes(attrs[index - count]);
 
-        if (index === extras[0]) {
+        if (extras.length > 0 && index === extras[0]) {
           // current index is a small cap
-          value[DocumentApp.Attribute.FONT_SIZE] = Math.round(value[DocumentApp.Attribute.FONT_SIZE] * 0.77);
+          var size = value[DocumentApp.Attribute.FONT_SIZE];
+          var computed = Math.round(size * 0.77);
+
+          value[DocumentApp.Attribute.FONT_SIZE] = computed;
+
           extras.shift();
           count++;
         }
@@ -94,11 +98,14 @@ function makeNormalCaps() {
   swapChars(normalCaps);
 
   // Font scaling
-  var extras = [];
-  var count = 0;
+  var extras;
+  var count;
 
   replaceText(
     function(text) {
+      extras = [];
+      count = 0;
+
       return text.replace(
         new RegExp('[A-Z]' + variantSurrogate, 'g'),
         function(c, offset) {
@@ -110,7 +117,7 @@ function makeNormalCaps() {
     function(attrs, index) {
       var value = cleanAttributes(attrs[index + count]);
 
-      if (index === extras[0]) {
+      if (extras.length > 0 && index === extras[0]) {
         // current index is a small cap
         extras.shift();
         count++;

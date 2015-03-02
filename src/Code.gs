@@ -74,9 +74,16 @@ function replaceText(fn, attrFn) {
     value = fn(value);
 
     var attrs = [];
+    var attr;
 
     for (var i = startIndex; i <= endIndex; i++) {
-      attrs[i - startIndex] = text.getAttributes(i);
+      // In some cases, the object returned by getAttributes() is missing values for some attributes.
+      // To work around this, which seems to be a bug in the Google Docs API, we simply supplement the
+      // attributes object by calling getFontSize() directly.
+      attr = text.getAttributes(i);
+      attr[DocumentApp.Attribute.FONT_SIZE] = text.getFontSize(i);
+
+      attrs[i - startIndex] = attr;
     }
 
     text.deleteText(startIndex, endIndex);
