@@ -79,6 +79,11 @@ function makeSmallCaps() {
         if (extras.length > 0 && index === extras[0]) {
           // current index is a small cap
           var size = value[DocumentApp.Attribute.FONT_SIZE];
+
+          if (size === undefined) {
+            size = 11; // Google Docs default font size is 11pt
+          }
+
           var computed = Math.round(size * 0.77);
 
           value[DocumentApp.Attribute.FONT_SIZE] = computed;
