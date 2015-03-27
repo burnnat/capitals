@@ -34,7 +34,7 @@ for (var c in smallCaps) {
 }
 
 function swapChars(charset) {
-  replaceText(function(text) {
+  reviseText(function(text) {
     return text.replace(
       /./g,
       function(c) {
@@ -60,7 +60,7 @@ function makeSmallCaps() {
     var extras;
     var count;
 
-    replaceText(
+    reviseText(
       function(text) {
         extras = [];
         count = 0;
@@ -106,7 +106,7 @@ function makeNormalCaps() {
   var extras;
   var count;
 
-  replaceText(
+  reviseText(
     function(text) {
       extras = [];
       count = 0;
