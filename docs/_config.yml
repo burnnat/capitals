@@ -1,0 +1,5 @@
+theme: jekyll-theme-minimal
+title: Page Sizer
+description: Google Docs add-on for modifying capitalization of text.
+logo: https://raw.githubusercontent.com/burnnat/capitals/master/assets/Capitals-Promo.png
+show_downloads: false
